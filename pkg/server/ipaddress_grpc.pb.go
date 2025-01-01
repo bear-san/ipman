@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.20.3
-// source: proto/ipaddress.proto
+// source: ipaddress.proto
 
 package server
 
@@ -105,5 +105,5 @@ var IPAddressService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/ipaddress.proto",
+	Metadata: "ipaddress.proto",
 }
