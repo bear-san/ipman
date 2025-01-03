@@ -2,12 +2,11 @@ syntax = "proto3";
 
 package ipman;
 
-option go_package = "github.com/bear-san/ipman/pkg/server";
+option go_package = "github.com/bear-san/ipman/pkg/grpc";
 
 service IPAddressService {
   rpc AssignAddress(AssignAddressRequest) returns (AssignAddressResponse);
 }
-
 
 enum AddressType {
   UNKNOWN = 0;

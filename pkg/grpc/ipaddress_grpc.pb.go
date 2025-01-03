@@ -4,7 +4,7 @@
 // - protoc             v3.20.3
 // source: ipaddress.proto
 
-package server
+package grpc
 
 import (
 	context "context"
