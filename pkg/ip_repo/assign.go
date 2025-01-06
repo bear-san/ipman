@@ -9,5 +9,29 @@ func (r IPRepo) AssignIPAddress(addressType string) (*IPAddress, error) {
 		return nil, fmt.Errorf("invalid IP Address Type: %s", addressType)
 	}
 
-	return nil, nil
+	addresses, err := r.GetAddresses()
+	if err != nil {
+		return nil, err
+	}
+
+	var nominatedAddress *IPAddress
+	for _, address := range addresses {
+		if !address.AutoAssignEnabled || address.Using || address.AddressType != addressType {
+			continue
+		}
+
+		nominatedAddress = &address
+		break
+	}
+
+	if nominatedAddress == nil {
+		return nil, fmt.Errorf("%s IP address is out of stock", addressType)
+	}
+
+	nominatedAddress.Using = true
+	if err := r.WriteToSheet(*nominatedAddress); err != nil {
+		return nil, err
+	}
+
+	return nominatedAddress, nil
 }
