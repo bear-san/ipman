@@ -1,11 +1,14 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package ipman;
 
 option go_package = "github.com/bear-san/ipman/pkg/grpc";
 
 service IPAddressService {
   rpc AssignAddress(AssignAddressRequest) returns (AssignAddressResponse);
+  rpc ReleaseAddress(ReleaseAddressRequest) returns (google.protobuf.Empty) {}
 }
 
 enum AddressType {
@@ -26,6 +29,10 @@ message IPAddress {
 
 message AssignAddressRequest {
   AddressType addressType = 1;
+}
+
+message ReleaseAddressRequest {
+  IPAddress address = 1;
 }
 
 message AssignAddressResponse {
