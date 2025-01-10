@@ -4,13 +4,14 @@
 // - protoc             v3.20.3
 // source: ipaddress.proto
 
-package server
+package grpc
 
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	IPAddressService_AssignAddress_FullMethodName = "/ipman.IPAddressService/AssignAddress"
+	IPAddressService_AssignAddress_FullMethodName  = "/ipman.IPAddressService/AssignAddress"
+	IPAddressService_ReleaseAddress_FullMethodName = "/ipman.IPAddressService/ReleaseAddress"
 )
 
 // IPAddressServiceClient is the client API for IPAddressService service.
@@ -27,6 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type IPAddressServiceClient interface {
 	AssignAddress(ctx context.Context, in *AssignAddressRequest, opts ...grpc.CallOption) (*AssignAddressResponse, error)
+	ReleaseAddress(ctx context.Context, in *ReleaseAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type iPAddressServiceClient struct {
@@ -46,11 +49,21 @@ func (c *iPAddressServiceClient) AssignAddress(ctx context.Context, in *AssignAd
 	return out, nil
 }
 
+func (c *iPAddressServiceClient) ReleaseAddress(ctx context.Context, in *ReleaseAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, IPAddressService_ReleaseAddress_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IPAddressServiceServer is the server API for IPAddressService service.
 // All implementations must embed UnimplementedIPAddressServiceServer
 // for forward compatibility
 type IPAddressServiceServer interface {
 	AssignAddress(context.Context, *AssignAddressRequest) (*AssignAddressResponse, error)
+	ReleaseAddress(context.Context, *ReleaseAddressRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedIPAddressServiceServer()
 }
 
@@ -60,6 +73,9 @@ type UnimplementedIPAddressServiceServer struct {
 
 func (UnimplementedIPAddressServiceServer) AssignAddress(context.Context, *AssignAddressRequest) (*AssignAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AssignAddress not implemented")
+}
+func (UnimplementedIPAddressServiceServer) ReleaseAddress(context.Context, *ReleaseAddressRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReleaseAddress not implemented")
 }
 func (UnimplementedIPAddressServiceServer) mustEmbedUnimplementedIPAddressServiceServer() {}
 
@@ -92,6 +108,24 @@ func _IPAddressService_AssignAddress_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _IPAddressService_ReleaseAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReleaseAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IPAddressServiceServer).ReleaseAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IPAddressService_ReleaseAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IPAddressServiceServer).ReleaseAddress(ctx, req.(*ReleaseAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // IPAddressService_ServiceDesc is the grpc.ServiceDesc for IPAddressService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +136,10 @@ var IPAddressService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AssignAddress",
 			Handler:    _IPAddressService_AssignAddress_Handler,
+		},
+		{
+			MethodName: "ReleaseAddress",
+			Handler:    _IPAddressService_ReleaseAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
