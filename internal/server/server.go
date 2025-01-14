@@ -14,6 +14,40 @@ type IPManServer struct {
 	IPRepo *ip_repo.IPRepo
 }
 
+func (s *IPManServer) ListAddresses(_ context.Context, _ *emptypb.Empty) (*grpc.ListAddressesResponse, error) {
+	addresses, err := s.IPRepo.GetAddresses()
+	if err != nil {
+		return nil, err
+	}
+
+	response := grpc.ListAddressesResponse{
+		Addresses: make([]*grpc.IPAddress, 0),
+	}
+	for _, address := range addresses {
+		var addressType grpc.AddressType
+		switch address.AddressType {
+		case ip_repo.IP_ADDRESS_TYPE_LOCAL:
+			addressType = grpc.AddressType_LOCAL
+		case ip_repo.IP_ADDRESS_TYPE_GLOBAL:
+			addressType = grpc.AddressType_GLOBAL
+		default:
+			return nil, status.Errorf(codes.Unavailable, "invalid Address Type: %s", address.AddressType)
+		}
+
+		response.Addresses = append(response.Addresses, &grpc.IPAddress{
+			Address:           address.Address,
+			Subnet:            address.Subnet,
+			GatewayAddress:    address.GatewayAddress,
+			AddressType:       addressType,
+			Using:             address.Using,
+			AutoAssignEnabled: address.AutoAssignEnabled,
+			Description:       address.Description,
+		})
+	}
+
+	return &response, nil
+}
+
 func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressRequest) (*grpc.AssignAddressResponse, error) {
 	var addressType string
 	switch in.AddressType {
