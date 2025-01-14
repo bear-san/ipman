@@ -10,6 +10,7 @@ service IPAddressService {
   rpc AssignAddress(AssignAddressRequest) returns (AssignAddressResponse);
   rpc ReleaseAddress(ReleaseAddressRequest) returns (google.protobuf.Empty);
   rpc ListAddresses(google.protobuf.Empty) returns (ListAddressesResponse);
+  rpc UpdateAddress(UpdateAddressRequest) returns (UpdateAddressResponse);
 }
 
 enum AddressType {
@@ -34,6 +35,15 @@ message ListAddressesResponse {
 
 message AssignAddressRequest {
   AddressType addressType = 1;
+  string description = 2;
+}
+
+message UpdateAddressRequest {
+  IPAddress address = 1;
+}
+
+message UpdateAddressResponse {
+  IPAddress address = 1;
 }
 
 message ReleaseAddressRequest {

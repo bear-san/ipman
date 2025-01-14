@@ -7,7 +7,8 @@ This manager manages IP Address pools managed in Google SpreadSheet and provide 
 ## Features
 - [x] Assign IP Address from pool
 - [x] Release IP Address from pool
-- [ ] Show IP Address in pool
+- [x] Show IP Address in pool
+- [x] Update IP Address in pool
 - [ ] Get IP Address in pool
 - [ ] Manage IP Address Pool
 

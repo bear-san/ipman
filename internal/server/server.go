@@ -48,6 +48,38 @@ func (s *IPManServer) ListAddresses(_ context.Context, _ *emptypb.Empty) (*grpc.
 	return &response, nil
 }
 
+func (s *IPManServer) UpdateAddress(_ context.Context, in *grpc.UpdateAddressRequest) (*grpc.UpdateAddressResponse, error) {
+	var addressType string
+	switch in.GetAddress().GetAddressType() {
+	case grpc.AddressType_LOCAL:
+		addressType = ip_repo.IP_ADDRESS_TYPE_LOCAL
+	case grpc.AddressType_GLOBAL:
+		addressType = ip_repo.IP_ADDRESS_TYPE_GLOBAL
+	default:
+		return nil, status.Errorf(codes.InvalidArgument, "invalid Address Type: %s", in.GetAddress().GetAddressType().String())
+	}
+
+	address := ip_repo.IPAddress{
+		Address:           in.GetAddress().GetAddress(),
+		Subnet:            in.GetAddress().GetSubnet(),
+		GatewayAddress:    in.GetAddress().GetGatewayAddress(),
+		AddressType:       addressType,
+		Using:             in.GetAddress().GetUsing(),
+		AutoAssignEnabled: in.GetAddress().GetAutoAssignEnabled(),
+		Description:       in.GetAddress().GetDescription(),
+	}
+
+	if err := s.IPRepo.WriteToSheet(address); err != nil {
+		return nil, err
+	}
+
+	response := grpc.UpdateAddressResponse{
+		Address: in.Address,
+	}
+
+	return &response, nil
+}
+
 func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressRequest) (*grpc.AssignAddressResponse, error) {
 	var addressType string
 	switch in.AddressType {
@@ -58,7 +90,7 @@ func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressReq
 	default:
 		return nil, status.Errorf(codes.InvalidArgument, "invalid Address Type: %s", in.GetAddressType().String())
 	}
-	assignedIPAddress, err := s.IPRepo.AssignIPAddress(addressType)
+	assignedIPAddress, err := s.IPRepo.AssignIPAddress(addressType, in.Description)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "failed to assign IP Address: %v", err.Error())
 	}
