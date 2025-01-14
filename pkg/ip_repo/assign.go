@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func (r IPRepo) AssignIPAddress(addressType string) (*IPAddress, error) {
+func (r IPRepo) AssignIPAddress(addressType string, description string) (*IPAddress, error) {
 	if addressType != IP_ADDRESS_TYPE_LOCAL && addressType != IP_ADDRESS_TYPE_GLOBAL {
 		return nil, fmt.Errorf("invalid IP Address Type: %s", addressType)
 	}
@@ -29,6 +29,7 @@ func (r IPRepo) AssignIPAddress(addressType string) (*IPAddress, error) {
 	}
 
 	nominatedAddress.Using = true
+	nominatedAddress.Description = description
 	if err := r.WriteToSheet(*nominatedAddress); err != nil {
 		return nil, err
 	}

@@ -58,7 +58,7 @@ func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressReq
 	default:
 		return nil, status.Errorf(codes.InvalidArgument, "invalid Address Type: %s", in.GetAddressType().String())
 	}
-	assignedIPAddress, err := s.IPRepo.AssignIPAddress(addressType)
+	assignedIPAddress, err := s.IPRepo.AssignIPAddress(addressType, in.Description)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "failed to assign IP Address: %v", err.Error())
 	}
