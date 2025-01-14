@@ -8,7 +8,8 @@ option go_package = "github.com/bear-san/ipman/pkg/grpc";
 
 service IPAddressService {
   rpc AssignAddress(AssignAddressRequest) returns (AssignAddressResponse);
-  rpc ReleaseAddress(ReleaseAddressRequest) returns (google.protobuf.Empty) {}
+  rpc ReleaseAddress(ReleaseAddressRequest) returns (google.protobuf.Empty);
+  rpc ListAddresses(google.protobuf.Empty) returns (ListAddressesResponse);
 }
 
 enum AddressType {
@@ -25,6 +26,10 @@ message IPAddress {
   bool using = 5;
   bool autoAssignEnabled = 6;
   string description = 7;
+}
+
+message ListAddressesResponse {
+  repeated IPAddress addresses = 1;
 }
 
 message AssignAddressRequest {

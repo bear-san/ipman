@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	IPAddressService_AssignAddress_FullMethodName  = "/ipman.IPAddressService/AssignAddress"
 	IPAddressService_ReleaseAddress_FullMethodName = "/ipman.IPAddressService/ReleaseAddress"
+	IPAddressService_ListAddresses_FullMethodName  = "/ipman.IPAddressService/ListAddresses"
 )
 
 // IPAddressServiceClient is the client API for IPAddressService service.
@@ -30,6 +31,7 @@ const (
 type IPAddressServiceClient interface {
 	AssignAddress(ctx context.Context, in *AssignAddressRequest, opts ...grpc.CallOption) (*AssignAddressResponse, error)
 	ReleaseAddress(ctx context.Context, in *ReleaseAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListAddresses(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAddressesResponse, error)
 }
 
 type iPAddressServiceClient struct {
@@ -58,12 +60,22 @@ func (c *iPAddressServiceClient) ReleaseAddress(ctx context.Context, in *Release
 	return out, nil
 }
 
+func (c *iPAddressServiceClient) ListAddresses(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAddressesResponse, error) {
+	out := new(ListAddressesResponse)
+	err := c.cc.Invoke(ctx, IPAddressService_ListAddresses_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IPAddressServiceServer is the server API for IPAddressService service.
 // All implementations must embed UnimplementedIPAddressServiceServer
 // for forward compatibility
 type IPAddressServiceServer interface {
 	AssignAddress(context.Context, *AssignAddressRequest) (*AssignAddressResponse, error)
 	ReleaseAddress(context.Context, *ReleaseAddressRequest) (*emptypb.Empty, error)
+	ListAddresses(context.Context, *emptypb.Empty) (*ListAddressesResponse, error)
 	mustEmbedUnimplementedIPAddressServiceServer()
 }
 
@@ -76,6 +88,9 @@ func (UnimplementedIPAddressServiceServer) AssignAddress(context.Context, *Assig
 }
 func (UnimplementedIPAddressServiceServer) ReleaseAddress(context.Context, *ReleaseAddressRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReleaseAddress not implemented")
+}
+func (UnimplementedIPAddressServiceServer) ListAddresses(context.Context, *emptypb.Empty) (*ListAddressesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAddresses not implemented")
 }
 func (UnimplementedIPAddressServiceServer) mustEmbedUnimplementedIPAddressServiceServer() {}
 
@@ -126,6 +141,24 @@ func _IPAddressService_ReleaseAddress_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _IPAddressService_ListAddresses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IPAddressServiceServer).ListAddresses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IPAddressService_ListAddresses_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IPAddressServiceServer).ListAddresses(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // IPAddressService_ServiceDesc is the grpc.ServiceDesc for IPAddressService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -140,6 +173,10 @@ var IPAddressService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReleaseAddress",
 			Handler:    _IPAddressService_ReleaseAddress_Handler,
+		},
+		{
+			MethodName: "ListAddresses",
+			Handler:    _IPAddressService_ListAddresses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
