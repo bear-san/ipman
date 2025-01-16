@@ -1,0 +1,46 @@
+image:
+  name: bearsan/ipman
+  tag: "0.1.0"
+env:
+  credentialPath: ""
+  manageSpreadsheetID: ""
+  manageSheetName: ""
+externalConfig:
+  credentialPath:
+    enabled: false
+    secret:
+      name: ""
+      key: ""
+    configMap:
+      name: ""
+      key: ""
+  manageSpreadsheetID:
+    enabled: false
+    secret:
+      name: ""
+      key: ""
+    configMap:
+      name: ""
+      key: ""
+  manageSheetName:
+    enabled: false
+    secret:
+      name: ""
+      key: ""
+    configMap:
+      name: ""
+      key: ""
+service:
+  type: ClusterIP
+ingress:
+  enabled: true
+  className: nginx
+  host: ""
+  certManager:
+    enabled: true
+    issuer:
+      type: ClusterIssuer
+      name: ""
+  externalTLS:
+    enabled: false
+    secretName: ""

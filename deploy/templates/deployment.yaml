@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipman-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ipman
+  template:
+    metadata:
+      labels:
+        app: ipman
+    spec:
+      containers:
+        - name: ipman
+          image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+          env:
+            - name: GOOGLE_CREDENTIAL_PATH
+              {{ if ne .Values.env.credentialPath "" }}
+              value: {{ .Values.env.credentialPath }}
+              {{ else if .Values.externalConfig.credentialPath.enabled }}
+              valueFrom:
+                {{ if ne .Values.externalConfig.credentialPath.secret.name "" }}
+                secretKeyRef:
+                  key: {{ .Values.externalConfig.credentialPath.secret.key }}
+                  name: {{ .Values.externalConfig.credentialPath.secret.name }}
+                {{ else if ne .Values.externalConfig.credentialPath.configMap.name "" }}
+                configMapKeyRef:
+                  key: {{ .Values.externalConfig.credentialPath.configMap.key }}
+                  name: {{ .Values.externalConfig.credentialPath.configMap.name }}
+                {{ end }}
+              {{ end }}
+            - name: MANAGE_SHEET_NAME
+              {{ if ne .Values.env.manageSpreadsheetID "" }}
+              value: {{ .Values.env.manageSpreadsheetID }}
+              {{ else if .Values.externalConfig.manageSpreadsheetID.enabled }}
+              valueFrom:
+                {{ if ne .Values.externalConfig.manageSpreadsheetID.secret.name "" }}
+                secretKeyRef:
+                  key: {{ .Values.externalConfig.manageSpreadsheetID.secret.key }}
+                  name: {{ .Values.externalConfig.manageSpreadsheetID.secret.name }}
+                {{ else if ne .Values.externalConfig.manageSpreadsheetID.configMap.name "" }}
+                configMapKeyRef:
+                  key: {{ .Values.externalConfig.manageSpreadsheetID.configMap.key }}
+                  name: {{ .Values.externalConfig.manageSpreadsheetID.configMap.name }}
+                {{ end }}
+              {{ end }}
+            - name: SPREADSHEET_ID
+              {{ if ne .Values.env.manageSheetName "" }}
+              value: {{ .Values.env.manageSheetName }}
+              {{ else if .Values.externalConfig.manageSheetName.enabled }}
+              valueFrom:
+                {{ if ne .Values.externalConfig.manageSheetName.secret.name "" }}
+                secretKeyRef:
+                  key: {{ .Values.externalConfig.manageSheetName.secret.key }}
+                  name: {{ .Values.externalConfig.manageSheetName.secret.name }}
+                {{ else if ne .Values.externalConfig.manageSheetName.configMap.name "" }}
+                configMapKeyRef:
+                  key: {{ .Values.externalConfig.manageSheetName.configMap.key }}
+                  name: {{ .Values.externalConfig.manageSheetName.configMap.name }}
+                {{ end }}
+              {{ end }}
