@@ -1,0 +1,26 @@
+{{ if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ipman-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    {{ if and (.Values.ingress.certManager.enabled) (eq .Values.ingress.certManager.issuer.type "ClusterIssuer") }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certManager.issuer.name }}
+    {{ else if and (.Values.ingress.certManager.enabled) (eq .Values.ingress.certManager.issuer.type "Issuer") }}
+    cert-manager.io/issuer: {{ .Values.ingress.certManager.issuer.name }}
+    {{ end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{ if or .Values.ingress.certManager.enabled .Values.ingress.externalTLS.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      {{ if .Values.ingress.certManager.enabled }}
+      secretName: ipman-secret
+      {{ else if .Values.ingress.externalTLS.enabled }}
+      secretName: {{ .Values.ingress.externalTLS.secretName }}
+      {{ end }}
+  {{ end }}
+{{ end }}
