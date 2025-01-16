@@ -1,6 +1,9 @@
 image:
   name: bearsan/ipman
   tag: "0.1.0"
+  imagePullSecret:
+    enabled: true
+    name: ""
 env:
   credentialPath: ""
   manageSpreadsheetID: ""

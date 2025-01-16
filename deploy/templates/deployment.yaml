@@ -60,3 +60,7 @@ spec:
                   name: {{ .Values.externalConfig.manageSheetName.configMap.name }}
                 {{ end }}
               {{ end }}
+      {{ if .Values.image.imagePullSecret.enabled }}
+      imagePullSecrets:
+        - {{ .Values.image.imagePullSecret.name }}
+      {{ end }}
