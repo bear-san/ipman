@@ -28,6 +28,8 @@ spec:
           - backend:
               service:
                 name: ipman-service
+                port:
+                  number: 8080
             pathType: Prefix
             path: /*
   {{ end }}
