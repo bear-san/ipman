@@ -5,18 +5,9 @@ image:
     enabled: true
     name: ""
 env:
-  credentialPath: ""
   manageSpreadsheetID: ""
   manageSheetName: ""
 externalConfig:
-  credentialPath:
-    enabled: false
-    secret:
-      name: ""
-      key: ""
-    configMap:
-      name: ""
-      key: ""
   manageSpreadsheetID:
     enabled: false
     secret:
@@ -47,3 +38,7 @@ ingress:
   externalTLS:
     enabled: false
     secretName: ""
+spreadsheetServiceAccount:
+  secret:
+    name: ""
+    key: ""
