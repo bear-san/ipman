@@ -17,7 +17,7 @@ spec:
           env:
             - name: GOOGLE_CREDENTIAL_PATH
               value: /secrets/{{ .Values.spreadsheetServiceAccount.secret.key }}
-            - name: MANAGE_SHEET_NAME
+            - name: SPREADSHEET_ID
               {{ if ne .Values.env.manageSpreadsheetID "" }}
               value: {{ .Values.env.manageSpreadsheetID }}
               {{ else if .Values.externalConfig.manageSpreadsheetID.enabled }}
@@ -32,7 +32,7 @@ spec:
                   name: {{ .Values.externalConfig.manageSpreadsheetID.configMap.name }}
                 {{ end }}
               {{ end }}
-            - name: SPREADSHEET_ID
+            - name: MANAGE_SHEET_NAME
               {{ if ne .Values.env.manageSheetName "" }}
               value: {{ .Values.env.manageSheetName }}
               {{ else if .Values.externalConfig.manageSheetName.enabled }}
