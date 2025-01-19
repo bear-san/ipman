@@ -22,5 +22,13 @@ spec:
       {{ else if .Values.ingress.externalTLS.enabled }}
       secretName: {{ .Values.ingress.externalTLS.secretName }}
       {{ end }}
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: ipman-service
+            pathType: Prefix
+            path: /*
   {{ end }}
 {{ end }}
