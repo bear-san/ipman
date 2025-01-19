@@ -48,15 +48,12 @@ spec:
                 {{ end }}
               {{ end }}
           volumeMounts:
-            - mountPath: /
+            - mountPath: /secrets
               name: spreadsheet-service-account
       volumes:
         - name: spreadsheet-service-account
           secret:
             secretName: {{ .Values.spreadsheetServiceAccount.secret.name }}
-            items:
-              - key: {{ .Values.spreadsheetServiceAccount.secret.key }}
-                path: secrets
       {{ if .Values.image.imagePullSecret.enabled }}
       imagePullSecrets:
         - {{ .Values.image.imagePullSecret.name }}
