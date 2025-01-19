@@ -48,7 +48,7 @@ spec:
                 {{ end }}
               {{ end }}
           volumeMounts:
-            - mountPath: /secrets/{{ .Values.spreadsheetServiceAccount.secret.key }}
+            - mountPath: /secrets
               name: spreadsheet-service-account
       volumes:
         - name: spreadsheet-service-account
