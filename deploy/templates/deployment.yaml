@@ -54,9 +54,6 @@ spec:
         - name: spreadsheet-service-account
           secret:
             secretName: {{ .Values.spreadsheetServiceAccount.secret.name }}
-            items:
-              - key: {{ .Values.spreadsheetServiceAccount.secret.key }}
-                path: secrets
       {{ if .Values.image.imagePullSecret.enabled }}
       imagePullSecrets:
         - {{ .Values.image.imagePullSecret.name }}
