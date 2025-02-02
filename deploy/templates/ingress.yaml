@@ -32,5 +32,6 @@ spec:
                   number: 8000
             pathType: Prefix
             path: /
+      host: {{ .Values.ingress.host }}
   {{ end }}
 {{ end }}
