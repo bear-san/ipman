@@ -21,12 +21,13 @@ enum AddressType {
 
 message IPAddress {
   string address = 1;
-  string subnet = 2;
   string gatewayAddress = 3;
   AddressType addressType = 4;
   bool using = 5;
   bool autoAssignEnabled = 6;
   string description = 7;
+
+  reserved 2;
 }
 
 message ListAddressesResponse {

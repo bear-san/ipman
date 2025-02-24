@@ -22,7 +22,6 @@ type IPRepo struct {
 
 type IPAddress struct {
 	Address           string
-	Subnet            string
 	GatewayAddress    string
 	AddressType       string
 	Using             bool
@@ -91,7 +90,7 @@ func (r IPRepo) WriteToSheet(ipAddress IPAddress) error {
 
 	rowIndex := -1
 	for i, state := range ipAddresses {
-		if state.Address != ipAddress.Address || state.Subnet != ipAddress.Subnet || state.GatewayAddress != ipAddress.GatewayAddress {
+		if state.Address != ipAddress.Address || state.GatewayAddress != ipAddress.GatewayAddress {
 			continue
 		}
 
@@ -112,8 +111,6 @@ func (r IPRepo) WriteToSheet(ipAddress IPAddress) error {
 		switch s {
 		case "IP":
 			newRow[i] = ipAddress.Address
-		case "Subnet":
-			newRow[i] = ipAddress.Subnet
 		case "GW":
 			newRow[i] = ipAddress.GatewayAddress
 		case "種別":
@@ -160,7 +157,6 @@ func (r IPRepo) ParseRows(headers map[string]int, rows [][]interface{}) ([]IPAdd
 
 		ipAddressData := IPAddress{
 			Address:           row[headers["IP"]].(string),
-			Subnet:            row[headers["Subnet"]].(string),
 			GatewayAddress:    row[headers["GW"]].(string),
 			AddressType:       row[headers["種別"]].(string),
 			Using:             row[headers["利用中"]].(string) == "TRUE",

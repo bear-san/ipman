@@ -36,7 +36,6 @@ func (s *IPManServer) ListAddresses(_ context.Context, _ *emptypb.Empty) (*grpc.
 
 		response.Addresses = append(response.Addresses, &grpc.IPAddress{
 			Address:           address.Address,
-			Subnet:            address.Subnet,
 			GatewayAddress:    address.GatewayAddress,
 			AddressType:       addressType,
 			Using:             address.Using,
@@ -61,7 +60,6 @@ func (s *IPManServer) UpdateAddress(_ context.Context, in *grpc.UpdateAddressReq
 
 	address := ip_repo.IPAddress{
 		Address:           in.GetAddress().GetAddress(),
-		Subnet:            in.GetAddress().GetSubnet(),
 		GatewayAddress:    in.GetAddress().GetGatewayAddress(),
 		AddressType:       addressType,
 		Using:             in.GetAddress().GetUsing(),
@@ -97,7 +95,6 @@ func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressReq
 	return &grpc.AssignAddressResponse{
 		Address: &grpc.IPAddress{
 			Address:           assignedIPAddress.Address,
-			Subnet:            assignedIPAddress.Subnet,
 			GatewayAddress:    assignedIPAddress.GatewayAddress,
 			AddressType:       in.AddressType,
 			Using:             assignedIPAddress.Using,
@@ -119,7 +116,6 @@ func (s *IPManServer) ReleaseAddress(_ context.Context, in *grpc.ReleaseAddressR
 	}
 	err := s.IPRepo.ReleaseIPAddress(ip_repo.IPAddress{
 		Address:           in.Address.Address,
-		Subnet:            in.Address.Subnet,
 		GatewayAddress:    in.Address.GatewayAddress,
 		AddressType:       addressType,
 		Using:             in.Address.Using,
