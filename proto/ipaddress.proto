@@ -20,6 +20,7 @@ enum AddressType {
 }
 
 message IPAddress {
+  string id = 8;
   string address = 1;
   string gatewayAddress = 3;
   AddressType addressType = 4;
