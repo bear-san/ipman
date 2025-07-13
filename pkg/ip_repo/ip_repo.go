@@ -21,6 +21,7 @@ type IPRepo struct {
 }
 
 type IPAddress struct {
+	ID                string
 	Address           string
 	GatewayAddress    string
 	AddressType       string
@@ -109,6 +110,8 @@ func (r IPRepo) WriteToSheet(ipAddress IPAddress) error {
 		}
 
 		switch s {
+		case "ID":
+			newRow[i] = ipAddress.ID
 		case "IP":
 			newRow[i] = ipAddress.Address
 		case "GW":
@@ -156,13 +159,14 @@ func (r IPRepo) ParseRows(headers map[string]int, rows [][]interface{}) ([]IPAdd
 		row := rows[i]
 
 		ipAddressData := IPAddress{
+			ID:                row[headers["ID"]].(string),
 			Address:           row[headers["IP"]].(string),
 			GatewayAddress:    row[headers["GW"]].(string),
 			AddressType:       row[headers["種別"]].(string),
 			Using:             row[headers["利用中"]].(string) == "TRUE",
 			AutoAssignEnabled: row[headers["自動割当対象"]].(string) == "TRUE",
 		}
-		if len(row) == 7 {
+		if len(row) == 8 {
 			ipAddressData.Description = row[headers["用途"]].(string)
 		}
 

@@ -35,6 +35,7 @@ func (s *IPManServer) ListAddresses(_ context.Context, _ *emptypb.Empty) (*grpc.
 		}
 
 		response.Addresses = append(response.Addresses, &grpc.IPAddress{
+			Id:                address.ID,
 			Address:           address.Address,
 			GatewayAddress:    address.GatewayAddress,
 			AddressType:       addressType,
@@ -94,6 +95,7 @@ func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressReq
 	}
 	return &grpc.AssignAddressResponse{
 		Address: &grpc.IPAddress{
+			Id:                assignedIPAddress.ID,
 			Address:           assignedIPAddress.Address,
 			GatewayAddress:    assignedIPAddress.GatewayAddress,
 			AddressType:       in.AddressType,
@@ -105,23 +107,7 @@ func (s *IPManServer) AssignAddress(_ context.Context, in *grpc.AssignAddressReq
 }
 
 func (s *IPManServer) ReleaseAddress(_ context.Context, in *grpc.ReleaseAddressRequest) (*emptypb.Empty, error) {
-	var addressType string
-	switch in.Address.AddressType {
-	case grpc.AddressType_LOCAL:
-		addressType = ip_repo.IP_ADDRESS_TYPE_LOCAL
-	case grpc.AddressType_GLOBAL:
-		addressType = ip_repo.IP_ADDRESS_TYPE_GLOBAL
-	default:
-		return nil, status.Errorf(codes.InvalidArgument, "invalid Address Type: %s", in.Address.GetAddressType().String())
-	}
-	err := s.IPRepo.ReleaseIPAddress(ip_repo.IPAddress{
-		Address:           in.Address.Address,
-		GatewayAddress:    in.Address.GatewayAddress,
-		AddressType:       addressType,
-		Using:             in.Address.Using,
-		AutoAssignEnabled: in.Address.AutoAssignEnabled,
-		Description:       in.Address.Description,
-	})
+	err := s.IPRepo.ReleaseIPAddress(in.Address.GetId())
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "failed to release IP Address: %v", err.Error())
 	}
