@@ -19,7 +19,6 @@ func (r IPRepo) ReleaseIPAddress(addressID string) error {
 		return fmt.Errorf("address with ID %s not found", addressID)
 	}
 
-	address.ID = ""
 	address.Using = false
 
 	if err := r.WriteToSheet(*address); err != nil {

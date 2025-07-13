@@ -110,8 +110,6 @@ func (r IPRepo) WriteToSheet(ipAddress IPAddress) error {
 		}
 
 		switch s {
-		case "ID":
-			newRow[i] = ipAddress.ID
 		case "IP":
 			newRow[i] = ipAddress.Address
 		case "GW":
